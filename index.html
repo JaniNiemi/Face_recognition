@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Face recognition stuff</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <script defer src="face-api.min.js"></script>
+        <script defer src="main.js"></script>
+    </head>
+    <body>
+        <img src="Cube-1s-200px.svg" alt="loading spinner" id="loader" />
+        <div class="inputs-container">
+            <div>
+                <label for="landmarks-check">
+                    Show face landmarks
+                    <input
+                        type="checkbox"
+                        name="landmarks"
+                        id="landmarks-check"
+                    />
+                </label>
+                <label for="expressions-check">
+                    Show face expressions
+                    <input
+                        type="checkbox"
+                        name="expressions"
+                        id="expressions-check"
+                    />
+                </label>
+            </div>
+        </div>
+        <video id="video" autoplay muted></video>
+    </body>
+</html>
