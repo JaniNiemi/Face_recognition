@@ -1,6 +1,7 @@
 const video = document.getElementById("video");
 const loadingEl = document.getElementById('loader');
 const inputsContainer = document.getElementsByClassName('inputs-container');
+const canvas = document.getElementById('canvas');
 
 const landmarksInput = document.getElementById('landmarks-check');
 const expressionsInput = document.getElementById('expressions-check');
@@ -16,7 +17,7 @@ const startVideo = async () => {
 const start = async () => {
     loadingEl.style.display = 'block';
     inputsContainer[0].style.display = 'none';
-    landmarksInput.checked = true;
+    landmarksInput.checked = false;
     expressionsInput.checked = true;
 
     await faceapi.loadSsdMobilenetv1Model('./models');
@@ -30,10 +31,11 @@ const start = async () => {
     loadingEl.style.display = 'none';
     inputsContainer[0].style.display = 'flex';
 
-    await startVideo();
+    startVideo();
 };
 start();
 
+let displaySize = {};
 video.addEventListener('play', async () => {
     let stream = await navigator.mediaDevices.getUserMedia({ video: { } });
     let streamSettings = stream.getVideoTracks()[0].getSettings();
@@ -43,22 +45,26 @@ video.addEventListener('play', async () => {
     video.width = streamWidth;
     video.height = streamHeight;
 
-    const canvas = faceapi.createCanvasFromMedia(video);
+    faceapi.matchDimensions(canvas, video);
     document.body.append(canvas);
 
-    const displaySize = { width: streamWidth, height: streamHeight };
+    displaySize = { width: streamWidth, height: streamHeight };
     faceapi.matchDimensions(canvas, displaySize);
 
-    setInterval(async () => {
-        const showLandmarks = landmarksInput.checked;
-        const showExpressions = expressionsInput.checked;
+    drawStuff();
+});
 
-        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
-        // console.log(detections);
-        const resizedDetections = faceapi.resizeResults(detections, displaySize);
-        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-        faceapi.draw.drawDetections(canvas, resizedDetections);
-        showLandmarks && faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-        showExpressions && faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
-    }, 250);
-})
+const drawStuff = async () => {
+    const showLandmarks = landmarksInput.checked;
+    const showExpressions = expressionsInput.checked;
+    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 320 })).withFaceLandmarks().withFaceExpressions();
+    // console.log(detections);
+    const resizedDetections = faceapi.resizeResults(detections, displaySize);
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    faceapi.draw.drawDetections(canvas, resizedDetections);
+    showLandmarks && faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+    showExpressions && faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+    setTimeout(() => {
+        drawStuff();
+    }, 50);
+}
