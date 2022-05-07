@@ -1,5 +1,6 @@
 const video = document.getElementById("video");
 const loadingEl = document.getElementById('loader');
+const inputsContainer = document.getElementsByClassName('inputs-container');
 
 const landmarksInput = document.getElementById('landmarks-check');
 const expressionsInput = document.getElementById('expressions-check');
@@ -14,8 +15,7 @@ const startVideo = async () => {
 
 const start = async () => {
     loadingEl.style.display = 'block';
-    landmarksInput.hidden = true;
-    expressionsInput.hidden = true;
+    inputsContainer[0].style.display = 'none';
     landmarksInput.checked = true;
     expressionsInput.checked = true;
 
@@ -28,8 +28,8 @@ const start = async () => {
     await faceapi.loadFaceExpressionModel('./models');
 
     loadingEl.style.display = 'none';
-    landmarksInput.hidden = false;
-    expressionsInput.hidden = false;
+    inputsContainer[0].style.display = 'flex';
+
     await startVideo();
 };
 start();
