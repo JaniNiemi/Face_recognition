@@ -35,7 +35,7 @@ const start = async () => {
 start();
 
 video.addEventListener('play', async () => {
-    let stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: '1280' }, height: { ideal: '720' } } });
+    let stream = await navigator.mediaDevices.getUserMedia({ video: { } });
     let streamSettings = stream.getVideoTracks()[0].getSettings();
     // actual width & height of the camera video
     let streamWidth = streamSettings.width;
