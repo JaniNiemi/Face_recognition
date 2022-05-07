@@ -4,8 +4,6 @@ const loadingEl = document.getElementById('loader');
 const landmarksInput = document.getElementById('landmarks-check');
 const expressionsInput = document.getElementById('expressions-check');
 
-let streamWidth;
-let streamHeight;
 const startVideo = async () => {
     navigator.getUserMedia(
         { video: {} },
@@ -20,13 +18,15 @@ const start = async () => {
     expressionsInput.hidden = true;
     landmarksInput.checked = true;
     expressionsInput.checked = true;
-    await faceapi.loadSsdMobilenetv1Model('/models');
-    await faceapi.loadTinyFaceDetectorModel('/models');
-    await faceapi.loadMtcnnModel('/models');
-    await faceapi.loadFaceLandmarkModel('/models');
-    await faceapi.loadFaceLandmarkTinyModel('/models');
-    await faceapi.loadFaceRecognitionModel('/models');
-    await faceapi.loadFaceExpressionModel('/models');
+
+    await faceapi.loadSsdMobilenetv1Model('./models');
+    await faceapi.loadTinyFaceDetectorModel('./models');
+    await faceapi.loadMtcnnModel('./models');
+    await faceapi.loadFaceLandmarkModel('./models');
+    await faceapi.loadFaceLandmarkTinyModel('./models');
+    await faceapi.loadFaceRecognitionModel('./models');
+    await faceapi.loadFaceExpressionModel('./models');
+
     loadingEl.style.display = 'none';
     landmarksInput.hidden = false;
     expressionsInput.hidden = false;
@@ -38,8 +38,8 @@ video.addEventListener('play', async () => {
     let stream = await navigator.mediaDevices.getUserMedia({ video: {} });
     let streamSettings = stream.getVideoTracks()[0].getSettings();
     // actual width & height of the camera video
-    streamWidth = streamSettings.width;
-    streamHeight = streamSettings.height;
+    let streamWidth = streamSettings.width;
+    let streamHeight = streamSettings.height;
     video.width = streamWidth;
     video.height = streamHeight;
 
